@@ -17,8 +17,9 @@ ARG BOX64_VERSION=v0.2.4
 ARG PRESET
 
 # version checksum of the archive to download
-ARG VERSION
-ARG SHA256
+ARG VERSION=1.1.109
+ARG SHA256=105a38533c916fe66e2fb2b9fe8f93c116568047a20c4daa74632072c077bf3f
+ARG BIND=fly-global-services
 
 LABEL factorio.version=${VERSION}
 
@@ -36,7 +37,8 @@ ENV PORT=34197 \
     SCENARIOS=/factorio/scenarios \
     SCRIPTOUTPUT=/factorio/script-output \
     PUID="$PUID" \
-    PGID="$PGID"
+    PGID="$PGID" \
+    BIND="$BIND"
 
 SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 RUN set -ox pipefail \
@@ -76,7 +78,9 @@ RUN set -ox pipefail \
 
 COPY files/*.sh /
 COPY files/config.ini /opt/factorio/config/config.ini
+COPY server-settings.json /factorio/config/server-settings.json
 
 VOLUME /factorio
+
 EXPOSE $PORT/udp $RCON_PORT/tcp
 ENTRYPOINT ["/docker-entrypoint.sh"]
